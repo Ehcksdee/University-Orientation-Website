@@ -70,7 +70,10 @@ body {
   line-height: 60px; /* Vertically center the text there */
 }
 
-.row{
+
+/*Homepage
+-------------------------------------------------- */
+.row {
     margin: auto;
     width: 80%;
 }
@@ -98,7 +101,7 @@ body {
     right: 0;
     overflow: hidden;
     transition: .5s ease;
-    background-color: #008CBA;
+    background-color: #707070;
 }
 
 .column:hover .overlay {
@@ -119,3 +122,7 @@ body {
     text-align: center;
     font-size: 12px;
 }
+
+
+/*
+-------------------------------------------------- */
