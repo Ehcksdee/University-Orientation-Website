@@ -197,3 +197,25 @@ body {
 .btn-group induction:hover {
     background-color: #9B9B9B;
 }
+
+.staff-directory input.form-control, .staff-directory button {
+  border-radius: 5em;
+}
+
+.staff-directory > .directory {
+  display: none!important;
+  max-height: 600px;
+  overflow-y: scroll;
+}
+
+.staff-directory > .details {
+  display: block;
+}
+
+.staff-directory.list-all > .directory {
+  display: block !important;
+}
+
+.staff-directory.list-all > .details {
+  display: none;
+}

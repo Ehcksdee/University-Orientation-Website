@@ -1,0 +1,108 @@
+﻿
+@model IEnumerable<Staff>
+<div class="d-sm-flex flex-column staff-directory list-all">
+    <div class="text-dark">Staff Directory</div>
+    <div class="search-filter p-2 d-sm-flex flex-row">
+        <form id="searchform" method="POST">
+            <div class="form-row">
+                <div class="form-group col-sm">
+                    <label for="inputName">Name</label>
+                    <input type="text" class="form-control searchinput" name="name" placeholder="Search">
+                </div>
+                <div class="form-group col-sm">
+                    <label for="inputSchool">School</label>
+                    <input type="text" class="form-control searchinput" name="school" placeholder="Search">
+                </div>
+                <div class="form-group col-sm">
+                    <label for="inputFaculty">Faculty</label>
+                    <input type="text" class="form-control searchinput" name="faculty" placeholder="Search">
+                </div>
+                <div class="form-group col-sm">
+                    <label for="inputDiscipline">Discipline</label>
+                    <input type="text" class="form-control searchinput" name="discipline" placeholder="Search">
+                </div>
+            </div>
+
+        </form>
+        <!-- <div class="d-sm-flex flex-column">
+            <div class="text-dark">Staff Directory</div>
+            <input type="text" placeholder="Search">
+        </div> -->
+    </div>
+    <div class="p-2 directory">
+        <div class="list-group">
+            
+            @foreach (var stf in (List<Staff>)ViewData["Staff"])
+            {
+            <div class="list-group-item d-flex flex-sm-row">
+                <div class="flex-sm-grow-1">@stf.name</div>
+                <div class="flex-sm-grow-1">@stf.school</div>
+                <div class="flex-sm-grow-1">@stf.faculty</div>
+                <div class="flex-sm-grow-1">@stf.discipline</div>
+                <button type="button" onclick="showDetails(@stf.id)" class="btn btn-outline-dark align-self-end show-details">Details</button>
+            </div>
+            }
+        </div>
+    </div>
+    <div class="p-2 details">
+        <div class="list-group">
+            <div class="list-group-item flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h3 id="dtname" class="p-2">Dr Alexandre Mendes</h3>
+                    <button type="button" onclick="hideDetails()" class="btn btn-dark return-to-directory">Return to Directory</button>
+                </div>
+                <div class="pb-4">
+                    <h5 id="dtschool">School of Electrical Engineering and Computing</h5>
+                    <p id="dtfaculty" class="mb-1">Faculty: College of Engineering, Science and Environment</p>
+                    <p id="dtdiscipline" class="mb-1">Discipline: College of Engineering, Science and Environment</p>
+                </div>
+                <div class="pb-4">
+                    <h5>Currently Held Positions:</h5>
+                    <p id="dtpositions" class="mb-1">Senior Lecturer, Program Convenor</p>
+                </div>
+                <div class="pb-4">
+                    <h5>Contact Details:</h5>
+                    <p id="dtphone" class="mb-1">Phone: 000000000</p>
+                    <p id="dtemail" class="mb-1">Email: xxxxxxxx@example.com</p>
+                    <p id="dtoffice" class="mb-1">Office: ES236 Engineering Science</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+        
+    <script>
+        var sdt = @Html.Raw(Json.Serialize(ViewData["Staff"]));
+        
+        function showDetails(id) {
+            document.querySelector('.staff-directory').classList.remove('list-all');
+            let obj = filterValue(id); 
+            document.querySelector('#dtname').innerHTML=obj.name;
+            document.querySelector('#dtschool').innerHTML=obj.school;
+            document.querySelector('#dtfaculty').innerHTML=obj.faculty;
+            document.querySelector('#dtdiscipline').innerHTML=obj.discipline;
+            document.querySelector('#dtpositions').innerHTML=obj.positions;
+            document.querySelector('#dtphone').innerHTML=obj.phone;
+            document.querySelector('#dtemail').innerHTML=obj.email;
+            document.querySelector('#dtoffice').innerHTML=obj.office;
+        }
+        function hideDetails() {
+            document.querySelector('.staff-directory').classList.add('list-all');
+        }
+        function filterValue(id) {
+            return sdt.find(function(v){ return v['id'] === id});
+        }
+        /*search box*/
+        const srhbox = document.querySelectorAll(".searchinput");
+
+        for (let i = 0; i < srhbox.length; i++) {
+            srhbox[i].addEventListener("keyup", function(event) {
+                if (event.keyCode === 13) {
+                    document.querySelector("#searchform").submit();
+                    return false;
+                }
+            });
+        }
+    </script>
