@@ -34,6 +34,11 @@ namespace University_Orientation_Website.Controllers
             return View();
         }
 
+        public IActionResult Other_Services()
+        {
+            return View();
+        }
+
         public IActionResult Induction()
         {
             return View();
