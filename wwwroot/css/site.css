@@ -131,6 +131,7 @@ body {
     float: left;
     background-color: #f1f1f1;
     width: 20%;
+    height: 100%
 }
 
     /* Style the buttons inside the tab */
@@ -162,7 +163,7 @@ body {
 .tabcontent {
     float: left;
     width: 70%;
-    padding: 2px, 2px;
+    margin-left:4px;
 }
 
 /*css class for testing*/
