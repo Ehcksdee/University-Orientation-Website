@@ -6,9 +6,11 @@
 
 <h1>Other Uni Services</h1>
 
+<div style=""></div>
+<button class="servicesTab"> Library </button>
 
-<div>
-    <h2>Library</h2>
+<div class="panel">
+    <hr />
     <p>
         The library is a one of the most welcoming spaces for the students at university where they can meet,
         learn, and study. The University of Newcastle provides some of the best libraries on its campuses.
@@ -20,3 +22,32 @@
 
 
 </div>
+
+
+
+
+
+<script>
+    //sets a var to coincide with an element on the page based on the Class name 
+    var tabs = document.getElementsByClassName("servicesTab");
+    var i;
+    //loops through the number of elements on the page tagged with the same class name
+    for (i = 0; i < tabs.length; i++) {
+        tabs[i].addEventListener("click", function () {  //"listens" for user to click one of the buttons with the same tag
+
+            // toggle button to be a different colour on click
+            this.classList.toggle("active");
+
+            // toggles for hiding and showing content when clicking
+            // gets the next element that is directly next to this element on the page
+            var panel = this.nextElementSibling;
+
+            //changes the element "display for the elements css
+            if (panel.style.display === "block") { //if you click and it's set to "block" it resets the css to "none" which hides the content
+                panel.style.display = "none";
+            } else { //otherwise, if you click and it's set to "none" it gets set to "block" which makes the content visible
+                panel.style.display = "block";
+            }
+        });
+    }
+</script>
