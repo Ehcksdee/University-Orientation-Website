@@ -85,12 +85,13 @@ body {
 
 .image-block {
     position: relative;
-    border: 6px black;
 }
 
 .image {
     width: 100%;
     height: auto;
+    box-shadow: 4px 4px rgba(0, 0, 0, 0.5);
+    border: 1px solid black;
 }
 
 .overlay {
@@ -111,7 +112,10 @@ body {
 
 .text {
     color: white;
-    font-size: 20px;
+    font-size: clamp(0.5rem, 2vw, 2rem);
+    top: 15%;
+    left: 2%;
+    right: 2%;
     position: absolute;
     text-align: center;
 }
