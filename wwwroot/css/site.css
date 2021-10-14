@@ -5,6 +5,7 @@ a.navbar-brand {
   white-space: normal;
   text-align: center;
   word-break: break-all;
+  font-size: 25px
 }
 
 /* Provide sufficient contrast against white background */
@@ -273,4 +274,30 @@ body {
     display: none;
     background-color: #dedede;
     overflow: hidden;
+}
+
+/* General
+-------------------------------------------------- */
+.blueline
+{
+    border-top: solid;
+    border-top-color:deepskyblue;
+}
+
+.whiteline {
+    border-bottom: solid;
+    border-bottom-color: white;
+    border-bottom-width: 4px;
+    width: 50%;
+}
+
+.nav-link 
+{
+
+}
+
+.nav-link:hover {
+    text-shadow: 0px 0px 3px deepskyblue;
+    border-bottom: solid;
+    border-bottom-color: deepskyblue;
 }
