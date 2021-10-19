@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using University_Orientation_Website.Models;
-using Microsoft.Data.Sqlite;
+// using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using X.PagedList;
 
 namespace University_Orientation_Website.Controllers
 {
@@ -44,64 +44,73 @@ namespace University_Orientation_Website.Controllers
             return View();
         }
         [HttpPost,HttpGet]
-        public IActionResult Staff(Staff model)
+        public IActionResult Staff(Staff model,int page = 1, int pagesize = 15)
         {
-            var connectionStringBuilder = new SqliteConnectionStringBuilder();
-
-            //Use DB in project directory.  If it does not exist, create it:
-            connectionStringBuilder.DataSource = "./dm.db";
-            
-            List<Staff> stf = new List<Staff>();
-            string where = "";
+            string key="1", val="1";
             if (!string.IsNullOrEmpty(model.name))
             {
-                where = " where name like '%" + model.name +"%' ";
+                key = "name";
+                val = model.name;
             }else if (!string.IsNullOrEmpty(model.school))
             {
-                where = " where school like '%" + model.school +"%' ";
+                key = "school";
+                val = model.school;
             }else if(!string.IsNullOrEmpty(model.faculty))
             {
-                where = " where faculty like '%" + model.faculty +"%' ";
+                key = "faculty";
+                val = model.faculty;
             }else if(!string.IsNullOrEmpty(model.discipline))
             {
-                where = " where discipline like '%" + model.discipline +"%' ";
+                key = "discipline";
+                val = model.discipline;
             }
-
-            using (var connection = new SqliteConnection(connectionStringBuilder.ConnectionString))
+            List<Staff> stfs;
+            using (var context = new SqliteDbContext())
             {
-                connection.Open();
                 //Read the data:
-                var selectCmd = connection.CreateCommand();
-                selectCmd.CommandText = "SELECT * FROM Staff" + where;
+                string selectCmd = "SELECT * FROM Staff WHERE " + key + " LIKE '%" + val + "%'";
+                if(key=="1") selectCmd = "SELECT * FROM Staff  ORDER BY id DESC";
+                stfs = context.Staff.FromSqlRaw(selectCmd).ToList();
 
-                
-                using (var reader = selectCmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        stf.Add(new Staff
-                        {
-                            id = Convert.ToInt32(reader["id"]),
-                            email = reader["email"].ToString(),
-                            name = reader["name"].ToString(),
-                            school = reader["school"].ToString(),
-                            faculty = reader["faculty"].ToString(),
-                            discipline = reader["discipline"].ToString(),
-                            office = reader["office"].ToString(),
-                            phone = reader["phone"].ToString(),
-                            positions = reader["positions"].ToString()
-                        });
-                    }
-                }
             }
-            ViewData["Staff"] = stf;
-            return View();
+            return View(stfs.ToPagedList(page, pagesize));
+            //ViewData["Staff"] = stfs;
+            //return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        [HttpPost]
+        public IActionResult Createstf(Staff stf)
+        {
+            using (var context = new SqliteDbContext())
+            {
+                context.Staff.Update(stf);
+                context.SaveChanges();
+            }
+            return CreatedAtAction(nameof(Createstf), new { id = stf.id }, stf);
+        }
+        public IActionResult Staffedit(int page = 1, int pagesize = 15)
+        {
+            List<Staff> stfs;
+            using (var context = new SqliteDbContext())
+            {
+                string selectCmd = "SELECT * FROM Staff ORDER BY id DESC";
+                stfs = context.Staff.FromSqlRaw(selectCmd).ToList();
+            }
+            return View(stfs.ToPagedList(page, pagesize));
+        }
+        public IActionResult Staffdel(int sid)
+        {
+            using (var context = new SqliteDbContext())
+            {
+                context.Remove(context.Staff.Single(a => a.id == sid));
+                context.SaveChanges();
+            }
+            return Ok();
         }
     }
 }

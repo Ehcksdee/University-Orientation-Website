@@ -6,6 +6,7 @@
     <title>@ViewData["Title"] - University_Orientation_Website</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
 </head>
 <body>
     <header>
@@ -33,6 +34,9 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Other_Services">Other Uni Services</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Staff">Staff</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -49,7 +53,7 @@
             &copy; 2021 - University Orientation Website - <a href="https://www.newcastle.edu.au/">University of Newcastle Wesbite</a>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)

@@ -1,0 +1,181 @@
+﻿
+
+@model X.PagedList.IPagedList<Staff>
+@using X.PagedList.Mvc.Core;
+<div class="d-sm-flex flex-column staff-directory list-all">
+    <div class="text-dark">Staff Directory</div>
+    <div class="search-filter p-2 d-sm-flex flex-row">
+        <form id="staphform" method="POST">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="inputName">Name</label>
+                    <input type="text" class="form-control searchinput" name="name" placeholder="">
+                </div>
+            
+                <div class="form-group col-md-4">
+                    <label for="inputSchool">School</label>
+                    <input type="text" class="form-control searchinput" name="school" placeholder="">
+                </div>
+            
+                <div class="form-group col-md-4">
+                    <label for="inputFaculty">Faculty</label>
+                    <input type="text" class="form-control searchinput" name="faculty" placeholder="">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="inputDiscipline">Discipline</label>
+                    <input type="text" class="form-control searchinput" name="discipline" placeholder="">
+                </div>
+            
+                <div class="form-group col-md-4">
+                    <label for="inputEmail">Email</label>
+                    <input type="text" class="form-control searchinput" name="email" placeholder="">
+                </div>
+            
+                <div class="form-group col-md-4">
+                    <label for="inputPhone">Phone</label>
+                    <input type="text" class="form-control searchinput" name="phone" placeholder="">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="inputOffice">Office</label>
+                    <input type="text" class="form-control searchinput" name="office" placeholder="">
+                </div>
+            
+                <div class="form-group col-md-4">
+                    <label for="inputPositions">Positions</label>
+                    <input type="text" class="form-control searchinput" name="positions" placeholder="">
+                </div>
+            
+                <div class="form-group text-right">
+                    <label for="submit">&nbsp;</label>
+                    <input type="hidden" name="id">
+                    <button class="form-control searchinput" name="submit" id="btnadd">Add</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="successMessage" style="font-size:20px;color:green;font-weight:bold;"></div>
+    <div class="p-2 directory">
+        <div class="list-group"> 
+            @foreach (var stf in Model)
+            {
+            <div class="list-group-item d-flex flex-sm-row">
+                <div class="flex-sm-grow-1">@stf.name</div>
+                <div class="flex-sm-grow-1">@stf.school</div>
+                <div class="flex-sm-grow-1">@stf.faculty</div>
+                <div class="flex-sm-grow-1">@stf.discipline</div>
+                <button type="button" class="btn btn-warning align-self-end show-details" onclick="confirmDeleteModal(@stf.id)">Delete</button>
+                <button type="button" onclick="showDetails(@stf.id)" class="btn btn-outline-dark align-self-end show-details">Edit</button>
+            </div>
+            }
+        </div>
+        @Html.PagedListPager(Model, page => Url.Action("Staffedit", new { page }))
+    </div>    
+    <style>.pagination li {font-size: 1.2rem;padding:.2rem .4rem}.pagination li.active{border: 1px solid #dee2e6;}.pagination{margin-top:1rem}</style>
+    <div class="p-2 details">
+        <div class="list-group">
+            <div class="list-group-item flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <button type="button" onclick="hideDetails()" class="btn btn-dark return-to-directory">Return to Directory</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title float-left"></h4>
+            </div>
+            <div class="modal-body">
+                <p>Do You Really Want to Delete This ?</p>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				<span id="deleteButton" class="btn btn-danger px-4"></span>
+            </div>
+			
+        </div>
+      </div>
+  </div>
+        
+    <script>
+        var sdt = @Html.Raw(Json.Serialize(Model));        
+        function showDetails(id) {
+            document.querySelector('.staff-directory').classList.remove('list-all');
+            let obj = filterValue(id); 
+            document.querySelector('input[name="id"]').value=obj.id;
+            //document.querySelector('#dtname').innerHTML=obj.name;
+            document.querySelector('input[name="name"]').value=obj.name;
+            //document.querySelector('#dtschool').innerHTML=obj.school;
+            document.querySelector('input[name="school"]').value=obj.school;
+            //document.querySelector('#dtfaculty').innerHTML=obj.faculty;
+            document.querySelector('input[name="faculty"]').value=obj.faculty;
+            //document.querySelector('#dtdiscipline').innerHTML=obj.discipline;
+            document.querySelector('input[name="discipline"]').value=obj.discipline;
+            //document.querySelector('#dtpositions').innerHTML=obj.positions;
+            document.querySelector('input[name="positions"]').value=obj.positions;
+            //document.querySelector('#dtphone').innerHTML=obj.phone;
+            document.querySelector('input[name="phone"]').value=obj.phone;
+            //document.querySelector('#dtemail').innerHTML=obj.email;
+            document.querySelector('input[name="email"]').value=obj.email;
+            //document.querySelector('#dtoffice').innerHTML=obj.office;
+            document.querySelector('input[name="office"]').value=obj.office;
+            $("#btnadd").text("Update");
+        }
+        function hideDetails() {
+            document.querySelector('.staff-directory').classList.add('list-all');
+            $("#staphform")[0].reset();
+            $("#btnadd").text("Add");
+        }
+        function confirmDeleteModal(id) {
+            $('#deleteModal').modal();
+            $('#deleteButton').html('<a class="btn btn-danger px-4" onclick="deleteItem('+id+')">Delete</a>');
+        }   
+        function deleteItem(id) {
+            $.ajax({
+                type:"GET",
+                url:"/Home/Staffdel?sid="+id,
+                success: function (msg) {
+                    $("#successMessage").html("Record With id "+id+" Deleted successfully!");
+                    setTimeout("location.reload()", 3000 );
+                },
+                error:function(XMLHttpRequest, textStatus, errorThrown){
+                    console.log("Error");
+                }
+            })
+            
+            $('#deleteModal').modal('hide'); // now close modal
+        }
+        function filterValue(id) {
+            return sdt.find(function(v){ return v['id'] === id});
+        }
+        /*post form*/
+        $("form").submit(function(e){
+            let inname = $.trim($("input[name='name']").val());
+            let inschool = $.trim($("input[name='school']").val());
+            let infaculty = $.trim($("input[name='faculty']").val());
+            let indiscipline = $.trim($("input[name='discipline']").val());
+            if (inname.length==0 || inschool.length==0 || infaculty.length==0 || indiscipline.leng==0 ) return false;
+            let form =new FormData($( "#staphform")[0] );
+            $.ajax({
+                type:"POST",
+                url:"/Home/Createstf",
+                data: form,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (msg) {
+                    $("#successMessage").html("Record Added/Updated successfully!");
+                    setTimeout("location.reload()", 3000 );
+                },
+                error:function(XMLHttpRequest, textStatus, errorThrown){
+                    console.log("Error");
+                }
+            })
+            return false;
+        });
+    </script>

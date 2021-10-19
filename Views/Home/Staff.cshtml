@@ -1,5 +1,6 @@
 ﻿
-@model IEnumerable<Staff>
+@model X.PagedList.IPagedList<Staff>
+@using X.PagedList.Mvc.Core;
 <div class="d-sm-flex flex-column staff-directory list-all">
     <div class="text-dark">Staff Directory</div>
     <div class="search-filter p-2 d-sm-flex flex-row">
@@ -24,15 +25,11 @@
             </div>
 
         </form>
-        <!-- <div class="d-sm-flex flex-column">
-            <div class="text-dark">Staff Directory</div>
-            <input type="text" placeholder="Search">
-        </div> -->
     </div>
     <div class="p-2 directory">
         <div class="list-group">
             
-            @foreach (var stf in (List<Staff>)ViewData["Staff"])
+            @foreach (var stf in Model)
             {
             <div class="list-group-item d-flex flex-sm-row">
                 <div class="flex-sm-grow-1">@stf.name</div>
@@ -43,7 +40,9 @@
             </div>
             }
         </div>
+        @Html.PagedListPager(Model, page => Url.Action("Staff", new { page }))
     </div>
+    <style>.pagination li {font-size: 1.2rem;padding:.2rem .4rem}.pagination li.active{border: 1px solid #dee2e6;}.pagination{margin-top:1rem}</style>    
     <div class="p-2 details">
         <div class="list-group">
             <div class="list-group-item flex-column align-items-start">
@@ -52,9 +51,9 @@
                     <button type="button" onclick="hideDetails()" class="btn btn-dark return-to-directory">Return to Directory</button>
                 </div>
                 <div class="pb-4">
-                    <h5 id="dtschool">School of Electrical Engineering and Computing</h5>
-                    <p id="dtfaculty" class="mb-1">Faculty: College of Engineering, Science and Environment</p>
-                    <p id="dtdiscipline" class="mb-1">Discipline: College of Engineering, Science and Environment</p>
+                    <p class="mb-1">School: <span id="dtschool"></span></p>
+                    <p class="mb-1">Faculty: <span id="dtfaculty"></span></p>
+                    <p class="mb-1">Discipline: <span id="dtdiscipline"></span></p>
                 </div>
                 <div class="pb-4">
                     <h5>Currently Held Positions:</h5>
@@ -62,9 +61,9 @@
                 </div>
                 <div class="pb-4">
                     <h5>Contact Details:</h5>
-                    <p id="dtphone" class="mb-1">Phone: 000000000</p>
-                    <p id="dtemail" class="mb-1">Email: xxxxxxxx@example.com</p>
-                    <p id="dtoffice" class="mb-1">Office: ES236 Engineering Science</p>
+                    <p class="mb-1">Phone: <span id="dtphone"></span></p>
+                    <p class="mb-1">Email: <span id="dtemail"></span></p>
+                    <p class="mb-1">Office: <span id="dtoffice"></span></p>
                 </div>
             </div>
         </div>
@@ -74,9 +73,10 @@
 
         
     <script>
-        var sdt = @Html.Raw(Json.Serialize(ViewData["Staff"]));
+        var sdt = @Html.Raw(Json.Serialize(Model));
         
         function showDetails(id) {
+            document.querySelector('.search-filter').style.display = 'none';
             document.querySelector('.staff-directory').classList.remove('list-all');
             let obj = filterValue(id); 
             document.querySelector('#dtname').innerHTML=obj.name;
@@ -90,6 +90,7 @@
         }
         function hideDetails() {
             document.querySelector('.staff-directory').classList.add('list-all');
+            document.querySelector('.search-filter').style.display = 'block';
         }
         function filterValue(id) {
             return sdt.find(function(v){ return v['id'] === id});
