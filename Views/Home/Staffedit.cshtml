@@ -59,10 +59,10 @@
             @foreach (var stf in Model)
             {
             <div class="list-group-item d-flex flex-sm-row">
-                <div class="flex-sm-grow-1">@stf.name</div>
-                <div class="flex-sm-grow-1">@stf.school</div>
-                <div class="flex-sm-grow-1">@stf.faculty</div>
-                <div class="flex-sm-grow-1">@stf.discipline</div>
+                <div class="flex-sm-grow-1" style="width:10%; padding-right: 50px;">@stf.name</div>
+                <div class="flex-sm-grow-1" style="width:10%; padding-right: 50px;">@stf.school</div>
+                <div class="flex-sm-grow-1" style="width:10%; padding-right: 50px;">@stf.faculty</div>
+                <div class="flex-sm-grow-1" style="width:10%; padding-right: 50px;">@stf.discipline</div>
                 <button type="button" class="btn btn-warning align-self-end show-details" onclick="confirmDeleteModal(@stf.id)">Delete</button>
                 <button type="button" onclick="showDetails(@stf.id)" class="btn btn-outline-dark align-self-end show-details">Edit</button>
             </div>
